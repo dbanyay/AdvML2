@@ -25,10 +25,6 @@ import numpy as np
 """
 
 
-
-
-
-
 """
   Load the parameters of each tree and three samples from it.
   The data is stored in a dictionary. 
@@ -48,31 +44,33 @@ import numpy as np
 Use pickle
 """
 
-my_data_path = ''
+my_data_path = 'D:/KTH/Advanced Machine Learning/Assignment 2/AdvML2/MLadvHT18-master/2_3/'
 
 with open(my_data_path + 'tree_params.pickle', 'rb') as handle:
-    params = pickle.load(handle)
+    params = pickle.load(handle,  encoding='latin1')
 
 with open(my_data_path + 'tree_samples.pickle', 'rb') as handle:
-    samples = pickle.load(handle)
+    samples = pickle.load(handle,  encoding='latin1')
 
 
 """
 Use numpy
 """
 
-params = np.load(my_data_path +  'tree_params.npy').tolist()
-samples = np.load(my_data_path +  'tree_samples.npy').tolist()
+params = np.load(my_data_path +  'tree_params.npy',encoding='latin1').tolist()
+samples = np.load(my_data_path +  'tree_samples.npy',encoding='latin1').tolist()
 
 
 
 """
     Construct a tree with parameters from the loaded parameter dict.
 """
-params_name = params.keys()[0]     
-params = params[params_name]
-root = load_params(params)
 
+
+params_name = list(params.keys())[0]
+
+params = params[list(params.keys())[0]]
+root = load_params(params)
 
 
 """
@@ -105,9 +103,10 @@ t = Tree()
 my_data_path = ''
 
 with open(my_data_path + 'tree_params.pickle', 'rb') as handle:
-    params = pickle.load(handle)
+    params = pickle.load(handle, encoding='latin1')
 
-key = params.keys()[0]    
+key = list(params.keys())[0]
+
     
 """
 Load params into tree
