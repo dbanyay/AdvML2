@@ -35,7 +35,7 @@ import numpy as np
       mb:= maximum branching factor of each node
       alpha:= the alpha values used to draw the parameters from a Dirichlet
   
-  None of these numbers is important for your implementation but cab be 
+  None of these numbers is important for your implementation but can be 
   used for interpretation.
 """
 
@@ -118,13 +118,15 @@ Load params into tree
 t.load_params(params[key])
 
 print('\nPrint tree object: \n')
-t.print_tree()        
+t.print_tree()
+
+t.find_leaf()
 
 """
 Generate a random tree
 """
-t.create_random_tree(3)
-print('\nPrint random tree object: \n')
-t.print_tree()
+# t.create_random_tree(2)
+# print('\nPrint random tree object: \n')
+# t.print_tree()
 
-t.calculate_leaf()
+

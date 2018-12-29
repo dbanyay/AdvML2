@@ -152,11 +152,9 @@ class Tree:
             print(string)
             curr_layer = next_layer
 
-    def calculate_leaf(self):
+    def find_leaf(self):
         """
-            Prints tree layer by layer without correct spacing for children.
-            print_sample (bool) determines whether we also print the current
-            sample.
+        find leaves in a tree
         """
         curr_layer = [self.root]
         while curr_layer != []:
@@ -165,10 +163,37 @@ class Tree:
             for elem in curr_layer:
                 for child in elem.descendants:
                     if child.descendants == []:
-                        print('no child: ' + str(child.name))
+                        # print('no child: ' + str(child.name))
+                        self.calculate_leaf(child)
                     next_layer.append(child)
 
             curr_layer = next_layer
+
+    def calculate_leaf(self, leaf):
+        """
+        calculate probability of a leaf
+        """
+
+        num_params = len(leaf.cat)
+
+        cur_node = leaf
+        params = leaf.cat
+
+        while cur_node.ancestor != None:
+            # print('goin up' +str(cur_node.name))
+            for var in range(num_params):
+                for theta in range(num_params):
+                    params[var][theta] = params[var][theta]*leaf.cat[var][theta]
+            cur_node = cur_node.ancestor
+
+        params = np.multiply(params, cur_node.cat[0])
+        print(params)
+
+
+
+
+
+
 
     def convert_tree_to_format(self):
         """
