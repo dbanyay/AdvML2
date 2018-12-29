@@ -156,6 +156,10 @@ class Tree:
         """
         find leaves in a tree
         """
+
+        num_leaves = 0
+        values = []
+
         curr_layer = [self.root]
         while curr_layer != []:
             string = ''
@@ -164,12 +168,15 @@ class Tree:
                 for child in elem.descendants:
                     if child.descendants == []:
                         # print('no child: ' + str(child.name))
-                        self.calculate_leaf(child)
+                        self.calculate_leaf(child,values)
+                        num_leaves += 1
                     next_layer.append(child)
 
             curr_layer = next_layer
+        print('number of leaves: '+str(num_leaves))
 
-    def calculate_leaf(self, leaf):
+
+    def calculate_leaf(self, leaf, values):
         """
         calculate probability of a leaf
         """
@@ -187,8 +194,7 @@ class Tree:
             cur_node = cur_node.ancestor
 
         params = np.multiply(params, cur_node.cat[0])
-        print(params)
-
+        values.append(params)
 
 
 
