@@ -152,6 +152,24 @@ class Tree:
             print(string)
             curr_layer = next_layer
 
+    def calculate_leaf(self):
+        """
+            Prints tree layer by layer without correct spacing for children.
+            print_sample (bool) determines whether we also print the current
+            sample.
+        """
+        curr_layer = [self.root]
+        while curr_layer != []:
+            string = ''
+            next_layer = []
+            for elem in curr_layer:
+                for child in elem.descendants:
+                    if child.descendants == []:
+                        print('no child: ' + str(child.name))
+                    next_layer.append(child)
+
+            curr_layer = next_layer
+
     def convert_tree_to_format(self):
         """
             Returns a sample in our python / Newick format. 

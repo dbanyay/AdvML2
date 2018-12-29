@@ -40,6 +40,7 @@ import numpy as np
 """
 
 
+
 """
 Use pickle
 """
@@ -85,11 +86,14 @@ load_sample(root, sample)
 """
 Print the tree (not very sophisticated). Structure: nodename_parentname
 """
+print('Root: \n')
 print_tree(root)
+
 
 """
 Print the tree with sample (not very sophisticated). Structure: nodename_parentname:sample
 """
+print('\nTree with sample: \n')
 print_tree(root, print_sample = True)
 
 """
@@ -100,7 +104,7 @@ Use tree object:
 t = Tree()    
     
 
-my_data_path = ''
+# my_data_path = ''
 
 with open(my_data_path + 'tree_params.pickle', 'rb') as handle:
     params = pickle.load(handle, encoding='latin1')
@@ -112,14 +116,15 @@ key = list(params.keys())[0]
 Load params into tree
 """
 t.load_params(params[key])
+
+print('\nPrint tree object: \n')
 t.print_tree()        
 
 """
 Generate a random tree
 """
 t.create_random_tree(3)
-t.print_tree( ) 
+print('\nPrint random tree object: \n')
+t.print_tree()
 
-
-
- 
+t.calculate_leaf()
