@@ -1,8 +1,6 @@
 import numpy as np
 import pickle
 
-
-
 class Node:
     
     def __init__(self, name, cat):
@@ -86,26 +84,25 @@ def calculate_leaf(leaf, values):
     values.append(leaf_params)
     return values
 
-memo = []
-sample = 0
-def dynamic_sampler(cur_node, beta):
+
+
+def dynamic_sampler(cur_node, beta, memo):
 
     if cur_node.name == '1':
         sample = sampler(cur_node.cat[0])
+        cur_node.sample = sample
         memo.append([cur_node.name, sample])
 
     for child in cur_node.descendants:
-            while cur_node.descendants != []:  # calculate p for given beta
-                sample = sampler(child.cat[sample-1])
-                memo.append([child.name, sample])
-                dynamic_sampler(child, beta)
-    return sample
+        sample = sampler(child.cat[child.ancestor.sample-1])
+        memo.append([child.name, sample])
+        memo = dynamic_sampler(child, beta, memo)
+    return memo
 
 def sampler(distribution):
 
     outcome = np.random.multinomial(1, distribution)
     return int(np.where(outcome)[0])
-
 
 class Tree:
     

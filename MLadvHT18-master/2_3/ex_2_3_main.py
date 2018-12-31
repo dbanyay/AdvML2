@@ -89,8 +89,10 @@ Print the tree (not very sophisticated). Structure: nodename_parentname
 print('Root: \n')
 print_tree(root, print_sample = True)
 beta = find_leaf(root)
-sample = dynamic_sampler(root, beta)
-print(sample)
+
+memo = []
+memo = dynamic_sampler(root, beta, memo)
+print(memo)
 
 """
 Print the tree with sample (not very sophisticated). Structure: nodename_parentname:sample
