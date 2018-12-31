@@ -78,41 +78,6 @@ print('Root: \n')
 print_tree(root, print_sample = True)
 beta = find_leaf(root)
 
-"""
-Print the tree with sample (not very sophisticated). Structure: nodename_parentname:sample
-"""
-# print('\nTree with sample: \n')
-# print_tree(root, print_sample = True)
-
-"""
-Use tree object:
-"""
-
-
-# t = Tree()
-#
-#
-# # my_data_path = ''
-#
-# with open(my_data_path + 'tree_params.pickle', 'rb') as handle:
-#     params = pickle.load(handle, encoding='latin1')
-#
-# key = list(params.keys())[0]
-#
-#
-# """
-# Load params into tree
-# """
-# t.load_params(params[key])
-#
-# print('\nPrint tree object: \n')
-# t.print_tree()
-#
-# t.find_leaf()
-#
-# """
-# Generate a random tree
-# """
 
 my_data_path = 'D:/KTH/Advanced Machine Learning/Assignment 2/AdvML2/MLadvHT18-master/2_5/'
 with open(my_data_path + 'tree_with_CPD.pkl', 'rb') as handle:
@@ -125,6 +90,8 @@ root2 = load_params(params2)
 
 load_sample(root2, sample2)
 print_tree(root2, print_sample = True)
+
+beta = find_leaf(root2)
 
 memo = []
 memo = dynamic_sampler(root2, memo)

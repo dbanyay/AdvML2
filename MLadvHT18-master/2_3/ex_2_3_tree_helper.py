@@ -58,7 +58,7 @@ def find_leaf(root):
                 next_layer.append(child)
 
         curr_layer = next_layer
-    print('number of leaves: '+str(num_leaves))
+    print('number of leaves: '+str(num_leaves)+'\n')
     return leaf_names
 
 
@@ -70,17 +70,8 @@ def calculate_leaf(leaf, values):
 
     cur_node = leaf
     beta = cur_node.sample
-
-    leaf_params = np.array(leaf.cat[beta])
-    print('leaf:'+leaf.name+' beta: '+str(beta))
-
-    while cur_node.ancestor.ancestor != None:   # calculate p for given beta
-        # print('goin up' +str(cur_node.name))
-        leaf_params = np.multiply(leaf_params[beta], cur_node.ancestor.cat[beta])
-        cur_node = cur_node.ancestor
-
-    leaf_params = np.multiply(leaf_params, cur_node.ancestor.cat[0][beta])
-    # leaf_params = leaf_params/sum(leaf_params) #normalize
+    leaf_params = leaf.cat[beta]
+    print('leaf: '+leaf.name+' sample: '+ str(leaf.sample))
     values.append(leaf_params)
     return values
 
