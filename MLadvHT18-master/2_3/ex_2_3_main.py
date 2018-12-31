@@ -1,6 +1,6 @@
 import pickle
 from ex_2_3 import Node, load_params, load_sample, print_tree
-from ex_2_3_tree_helper import Tree
+from ex_2_3_tree_helper import Tree, find_leaf, dynamic_sampler
 import numpy as np
 
 """
@@ -87,46 +87,50 @@ load_sample(root, sample)
 Print the tree (not very sophisticated). Structure: nodename_parentname
 """
 print('Root: \n')
-print_tree(root)
-
+print_tree(root, print_sample = True)
+beta = find_leaf(root)
+sample = dynamic_sampler(root, beta)
+print(sample)
 
 """
 Print the tree with sample (not very sophisticated). Structure: nodename_parentname:sample
 """
-print('\nTree with sample: \n')
-print_tree(root, print_sample = True)
+# print('\nTree with sample: \n')
+# print_tree(root, print_sample = True)
 
 """
 Use tree object:
 """
 
 
-t = Tree()    
-    
-
-# my_data_path = ''
-
-with open(my_data_path + 'tree_params.pickle', 'rb') as handle:
-    params = pickle.load(handle, encoding='latin1')
-
-key = list(params.keys())[0]
-
-    
-"""
-Load params into tree
-"""
-t.load_params(params[key])
-
-print('\nPrint tree object: \n')
-t.print_tree()
-
-t.find_leaf()
-
-"""
-Generate a random tree
-"""
+# t = Tree()
+#
+#
+# # my_data_path = ''
+#
+# with open(my_data_path + 'tree_params.pickle', 'rb') as handle:
+#     params = pickle.load(handle, encoding='latin1')
+#
+# key = list(params.keys())[0]
+#
+#
+# """
+# Load params into tree
+# """
+# t.load_params(params[key])
+#
+# print('\nPrint tree object: \n')
+# t.print_tree()
+#
+# t.find_leaf()
+#
+# """
+# Generate a random tree
+# """
 # t.create_random_tree(2)
 # print('\nPrint random tree object: \n')
+#
 # t.print_tree()
-
+#
+# t.find_leaf()
 

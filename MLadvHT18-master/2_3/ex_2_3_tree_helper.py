@@ -2,6 +2,7 @@ import numpy as np
 import pickle
 
 
+
 class Node:
     
     def __init__(self, name, cat):
@@ -36,7 +37,74 @@ def convert_to_list(array):
     
 def  dirichlet(a):
     return np.random.dirichlet(a)
+
+def find_leaf(root):
+    """
+    find leaves in a tree
+    """
+
+    num_leaves = 0
+    values = []
+    leaf_names = []
+
+    curr_layer = [root]
+    while curr_layer != []:
+        next_layer = []
+        for elem in curr_layer:
+            for child in elem.descendants:
+                if child.descendants == []:
+                    values = calculate_leaf(child, values)
+                    leaf_names.append(child.name)
+                    print('p: '+str(values[num_leaves]))
+                    num_leaves += 1
+                next_layer.append(child)
+
+        curr_layer = next_layer
+    print('number of leaves: '+str(num_leaves))
+    return leaf_names
+
+
     
+def calculate_leaf(leaf, values):
+    """
+    calculate p of a leaf
+    """
+
+    cur_node = leaf
+    beta = cur_node.sample
+
+    leaf_params = np.array(leaf.cat[beta])
+    print('leaf:'+leaf.name+' beta: '+str(beta))
+
+    while cur_node.ancestor.ancestor != None:   # calculate p for given beta
+        # print('goin up' +str(cur_node.name))
+        leaf_params = np.multiply(leaf_params[beta], cur_node.ancestor.cat[beta])
+        cur_node = cur_node.ancestor
+
+    leaf_params = np.multiply(leaf_params, cur_node.ancestor.cat[0][beta])
+    # leaf_params = leaf_params/sum(leaf_params) #normalize
+    values.append(leaf_params)
+    return values
+
+memo = []
+sample = 0
+def dynamic_sampler(cur_node, beta):
+
+    if cur_node.name == '1':
+        sample = sampler(cur_node.cat[0])
+        memo.append([cur_node.name, sample])
+
+    for child in cur_node.descendants:
+            while cur_node.descendants != []:  # calculate p for given beta
+                sample = sampler(child.cat[sample-1])
+                memo.append([child.name, sample])
+                dynamic_sampler(child, beta)
+    return sample
+
+def sampler(distribution):
+
+    outcome = np.random.multinomial(1, distribution)
+    return int(np.where(outcome)[0])
 
 
 class Tree:
@@ -151,54 +219,6 @@ class Tree:
                     next_layer.append(child)   
             print(string)
             curr_layer = next_layer
-
-    def find_leaf(self):
-        """
-        find leaves in a tree
-        """
-
-        num_leaves = 0
-        values = []
-
-        curr_layer = [self.root]
-        while curr_layer != []:
-            string = ''
-            next_layer = []
-            for elem in curr_layer:
-                for child in elem.descendants:
-                    if child.descendants == []:
-                        # print('no child: ' + str(child.name))
-                        self.calculate_leaf(child,values)
-                        num_leaves += 1
-                    next_layer.append(child)
-
-            curr_layer = next_layer
-        print('number of leaves: '+str(num_leaves))
-
-
-    def calculate_leaf(self, leaf, values):
-        """
-        calculate probability of a leaf
-        """
-
-        num_params = len(leaf.cat)
-
-        cur_node = leaf
-        params = leaf.cat
-
-        while cur_node.ancestor != None:
-            # print('goin up' +str(cur_node.name))
-            for var in range(num_params):
-                for theta in range(num_params):
-                    params[var][theta] = params[var][theta]*leaf.cat[var][theta]
-            cur_node = cur_node.ancestor
-
-        params = np.multiply(params, cur_node.cat[0])
-        values.append(params)
-
-
-
-
 
 
     def convert_tree_to_format(self):
