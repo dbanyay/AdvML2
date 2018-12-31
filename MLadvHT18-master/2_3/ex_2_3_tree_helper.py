@@ -86,7 +86,7 @@ def calculate_leaf(leaf, values):
 
 
 
-def dynamic_sampler(cur_node, beta, memo):
+def dynamic_sampler(cur_node, memo, beta = []):
 
     if cur_node.name == '1':
         sample = sampler(cur_node.cat[0])
@@ -95,14 +95,15 @@ def dynamic_sampler(cur_node, beta, memo):
 
     for child in cur_node.descendants:
         sample = sampler(child.cat[child.ancestor.sample-1])
+        child.sample = sample
         memo.append([child.name, sample])
-        memo = dynamic_sampler(child, beta, memo)
+        memo = dynamic_sampler(child, memo)
     return memo
 
 def sampler(distribution):
 
     outcome = np.random.multinomial(1, distribution)
-    return int(np.where(outcome)[0])
+    return int(np.where(outcome)[0])+1
 
 class Tree:
     

@@ -3,6 +3,7 @@ from ex_2_3 import Node, load_params, load_sample, print_tree
 from ex_2_3_tree_helper import Tree, find_leaf, dynamic_sampler
 import numpy as np
 
+
 """
     The data is stored in Newick form:
         [A,B,[C,D]E]F;
@@ -55,15 +56,6 @@ with open(my_data_path + 'tree_samples.pickle', 'rb') as handle:
 
 
 """
-Use numpy
-"""
-
-params = np.load(my_data_path +  'tree_params.npy',encoding='latin1').tolist()
-samples = np.load(my_data_path +  'tree_samples.npy',encoding='latin1').tolist()
-
-
-
-"""
     Construct a tree with parameters from the loaded parameter dict.
 """
 
@@ -82,17 +74,9 @@ sample = samples[samples_name]
 load_sample(root, sample)
 
 
-
-"""
-Print the tree (not very sophisticated). Structure: nodename_parentname
-"""
 print('Root: \n')
 print_tree(root, print_sample = True)
 beta = find_leaf(root)
-
-memo = []
-memo = dynamic_sampler(root, beta, memo)
-print(memo)
 
 """
 Print the tree with sample (not very sophisticated). Structure: nodename_parentname:sample
@@ -129,10 +113,19 @@ Use tree object:
 # """
 # Generate a random tree
 # """
-# t.create_random_tree(2)
-# print('\nPrint random tree object: \n')
-#
-# t.print_tree()
-#
-# t.find_leaf()
 
+my_data_path = 'D:/KTH/Advanced Machine Learning/Assignment 2/AdvML2/MLadvHT18-master/2_5/'
+with open(my_data_path + 'tree_with_CPD.pkl', 'rb') as handle:
+    params2 = pickle.load(handle,  encoding='latin1')
+
+with open(my_data_path + 'tree_with_leaf_samples.pkl', 'rb') as handle:
+    sample2 = pickle.load(handle, encoding='latin1')
+
+root2 = load_params(params2)
+
+load_sample(root2, sample2)
+print_tree(root2, print_sample = True)
+
+memo = []
+memo = dynamic_sampler(root2, memo)
+print(memo)
