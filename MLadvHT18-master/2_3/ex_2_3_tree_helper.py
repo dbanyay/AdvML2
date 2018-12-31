@@ -90,14 +90,16 @@ def dynamic_sampler(cur_node, memo):
 
     if cur_node.name == '1':
         sample = sampler(cur_node.cat[0])
+        prob = sample * cur_node.cat[0][sample - 1]
         cur_node.sample = sample
-        memo.append([cur_node.name, sample])
+        memo.append([cur_node.name, sample, prob])
 
     for child in cur_node.descendants:
         if child.descendants != []:
             sample = sampler(child.cat[child.ancestor.sample-1])
+            prob = sample*child.cat[0][sample-1]
             child.sample = sample
-            memo.append([child.name, sample])
+            memo.append([child.name, sample, prob])
             memo = dynamic_sampler(child, memo)
     return memo
 

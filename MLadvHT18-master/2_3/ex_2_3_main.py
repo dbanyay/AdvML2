@@ -132,3 +132,9 @@ memo = dynamic_sampler(root2, memo)
 print('\nTree after sampling:\n')
 
 print_tree(root2, print_sample = True)
+
+prob = 1
+for i in memo:
+    prob *= i[2]
+
+print('Tree Joint Probability: :' + str(prob))
