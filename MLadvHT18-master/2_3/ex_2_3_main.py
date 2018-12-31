@@ -128,4 +128,7 @@ print_tree(root2, print_sample = True)
 
 memo = []
 memo = dynamic_sampler(root2, memo)
-print(memo)
+
+print('\nTree after sampling:\n')
+
+print_tree(root2, print_sample = True)

@@ -86,7 +86,7 @@ def calculate_leaf(leaf, values):
 
 
 
-def dynamic_sampler(cur_node, memo, beta = []):
+def dynamic_sampler(cur_node, memo):
 
     if cur_node.name == '1':
         sample = sampler(cur_node.cat[0])
@@ -94,10 +94,11 @@ def dynamic_sampler(cur_node, memo, beta = []):
         memo.append([cur_node.name, sample])
 
     for child in cur_node.descendants:
-        sample = sampler(child.cat[child.ancestor.sample-1])
-        child.sample = sample
-        memo.append([child.name, sample])
-        memo = dynamic_sampler(child, memo)
+        if child.descendants != []:
+            sample = sampler(child.cat[child.ancestor.sample-1])
+            child.sample = sample
+            memo.append([child.name, sample])
+            memo = dynamic_sampler(child, memo)
     return memo
 
 def sampler(distribution):
