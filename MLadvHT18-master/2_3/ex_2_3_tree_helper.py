@@ -70,7 +70,7 @@ def calculate_leaf(leaf, values):
 
     cur_node = leaf
     beta = cur_node.sample
-    leaf_params = leaf.cat[beta]
+    leaf_params = [item[beta] for item in leaf.cat]
     print('leaf: '+leaf.name+' sample: '+ str(leaf.sample))
     values.append(leaf_params)
     return values

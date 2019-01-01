@@ -104,4 +104,4 @@ prob = 1
 for i in memo:
     prob *= i[2]
 
-print('Tree Joint Probability: :' + str(prob))
+print('Likelihood of the tree :' + str(prob))
