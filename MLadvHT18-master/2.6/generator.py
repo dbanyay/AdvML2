@@ -5,6 +5,7 @@ import numpy as np
 from collections import defaultdict
 
 
+
 #Variables you need
 M = 30
 N = 20
@@ -33,7 +34,7 @@ def generate_data():
     output_sequences = defaultdict(dict)
 
     for player_pair in player_pairs:
-        output_sequences[player_pair][i+1] = []
+        output_sequences[player_pair] = []
         for i in range(R):
             sequence = []
             table_idx = 0     #If we are in left side of M or right side
@@ -45,12 +46,12 @@ def generate_data():
                 player2_performance = np.random.normal(mu[table_idx,j,player_pair[1]-1], beta, 1)
                 sequence.append(player1_performance+player2_performance)
 
-            output_sequences[player_pair][i+1] = sequence
+            output_sequences[player_pair] = sequence
     return output_sequences
 
-if __name__ == '__main__':
+
     
-    output_sequences = generate_data()
-    #print output_sequences
-    '''Save the dictionary'''
-    #save_obj(output_sequences,"sequence_output")
+output_sequences = generate_data()
+#print output_sequences
+'''Save the dictionary'''
+#save_obj(output_sequences,"sequence_output")

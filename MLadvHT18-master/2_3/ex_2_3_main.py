@@ -40,7 +40,7 @@ import numpy as np
   used for interpretation.
 """
 
-
+################################### EXERCISE 2.3  ##################################################
 
 """
 Use pickle
@@ -79,6 +79,9 @@ print_tree(root, print_sample = True)
 beta = find_leaf(root)
 
 
+
+################################### EXERCISE 2.5  ##################################################
+
 my_data_path = 'D:/KTH/Advanced Machine Learning/Assignment 2/AdvML2/MLadvHT18-master/2_5/'
 with open(my_data_path + 'tree_with_CPD.pkl', 'rb') as handle:
     params2 = pickle.load(handle,  encoding='latin1')
@@ -91,7 +94,7 @@ root2 = load_params(params2)
 load_sample(root2, sample2)
 print_tree(root2, print_sample = True)
 
-beta = find_leaf(root2)
+# beta = find_leaf(root2)
 
 memo = []
 memo = dynamic_sampler(root2, memo)
