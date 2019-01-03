@@ -3,6 +3,8 @@ import random
 import itertools
 import numpy as np
 from collections import defaultdict
+from em import exp_max
+import forward_backward as fb
 
 
 
@@ -49,9 +51,45 @@ def generate_data():
             output_sequences[player_pair] = sequence
     return output_sequences
 
+def load_obj(name ):
+    with open('./' + name + '.pkl', 'rb') as f:
+        return pickle.load(f, encoding='latin1')
 
-    
-output_sequences = generate_data()
+
+
+
+
 #print output_sequences
 '''Save the dictionary'''
 #save_obj(output_sequences,"sequence_output")
+
+data = generate_data()
+
+# data = load_obj("sequence_output_2")
+
+xs = list(data.keys())
+
+players = []
+for p in range(1,N+1):
+    players.append( np.where([i[0] == p or i[1] == p for i in xs]))
+test = players[0]
+
+observations = data[xs[0]]
+
+# observations = [observations[i][0][0] for i in observations]
+
+
+print(fb.forward(fb.get_init, fb.get_transition, fb.get_emission, observations))
+
+
+
+# xs = np.array([(5,5), (9,1), (8,2), (4,6), (7,3)])
+# thetas = np.array([[0.6, 0.4], [0.5, 0.5]])
+# i, thetas, ll = exp_max(xs, thetas)
+# print(i)
+# for theta in thetas:
+#     print(theta)
+# print(ll)
+
+
+a = 1

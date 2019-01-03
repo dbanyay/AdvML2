@@ -1,21 +1,22 @@
 import numpy as np
 
 
-def get_transition(r1, m1, r2):
+def get_transition(r1, m, r2):
     # calculate A((r1, m1), (r2, m1+1)) (for test purpose we set below)
-    A = 0.3
-    return A
+    if r1 == r2:
+        return 0.25
+    else:
+        return 0.75
 
 
-def get_emission(r, o):
+def get_emission(r, o, m):
     # calculate O(m, o) (for test purpose we set below)
-    O = 0.5
-    return O
+    return o
 
 
 def get_init():
     # provide an array containing the initial state probability having size R (for test purpose we set below)
-    pi = np.array([0.2, 0.8])
+    pi = np.array([0.25, 0.75])
     # number of rows
     R = pi.shape[0]
     return pi, R
@@ -25,20 +26,24 @@ def forward(get_init, get_transition, get_emission, observations):
     pi, R = get_init()
     M = len(observations)
     alpha = np.zeros((M, R))
+    alpha_mat = np.zeros((M, R, M))
 
     # base case
     O = []
     for r in range(R):
-        O.append(get_emission(r, observations[0]))
+        O.append(get_emission(r, observations[0][0]))
     alpha[0, :] = pi * O[:]
-
+    alpha_mat[0, 0, 0:2] = pi * O[:]
+    alpha_mat[0, 1, 0:2] = pi * O[:]
     # recursive case
     for m in range(1, M):
         for r2 in range(R):
             for r1 in range(R):
                 transition = get_transition(r1, m, r2)
-                emission = get_emission(r2, observations[m])
+                emission = get_emission(r2, observations[m][0])
                 alpha[m, r2] += alpha[m - 1, r1] * transition * emission
+
+                alpha_mat[m, r2] += alpha[m - 1, r1] * transition * emission
 
 
     return (alpha, np.sum(alpha[M - 1, :]))
@@ -68,9 +73,6 @@ def backward(get_init, get_transition, get_emission, observations):
 
 
 
-# test examples
-print(forward(get_init, get_transition, get_emission, [0, 0, 1, 1, 1, 1]))
-print(backward(get_init, get_transition, get_emission, [0, 0, 1, 1, 1, 1]))
 
 
 
