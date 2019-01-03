@@ -82,22 +82,17 @@ players = []
 for p in range(1,N+1):
     players.append(np.where([i[0] == p or i[1] == p for i in xs])[0])
 
-mu_estimates = []
+mu_sums = []
 
 for elem in xs:
     cur_set = data[elem]
     for field in range(1,N):
-        obs = [cur_set[i][0][0] for i in cur_set]
+        obs = [cur_set[i][field][0] for i in range(1, R+1)] # use range because there was an error in data
         obs = np.asarray(obs).reshape(-1, 1)
         g = mixture.GMM(n_components=2, covariance_type='tied')
         g.fit(obs)
-        mu_estimates.append([elem, field, g.means_])
-
-
-
-
-
-
+        mu_sums.append([elem, field, g.means_])
+        print(str(elem)+ '   '+ str(field))
 
 
 sum_mat = np.zeros([M, 2, M])
