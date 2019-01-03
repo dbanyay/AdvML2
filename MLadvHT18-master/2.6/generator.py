@@ -64,34 +64,39 @@ def load_obj(name ):
 '''Save the dictionary'''
 #save_obj(output_sequences,"sequence_output")
 
-dummy_data = generate_data()
+# dummy_data = generate_data()
+#
+# dummy_xs = list(dummy_data.keys())
 
-dummy_xs = list(dummy_data.keys())
+# observations = dummy_data[dummy_xs[0]]
+#
+# alpha = list(fb.forward(fb.get_init, fb.get_transition, fb.get_emission, observations)[0])
+# alpha2 = list(fb.backward(fb.get_init, fb.get_transition, fb.get_emission, observations)[0])
 
 data = load_obj("sequence_output_2")
 
 xs = list(data.keys())
 
-
-
 players = []
+
 for p in range(1,N+1):
-    players.append( np.where([i[0] == p or i[1] == p for i in dummy_xs]))
+    players.append(np.where([i[0] == p or i[1] == p for i in xs])[0])
+
+mu_estimates = []
+
+for elem in xs:
+    cur_set = data[elem]
+    for field in range(1,N):
+        obs = [cur_set[i][0][0] for i in cur_set]
+        obs = np.asarray(obs).reshape(-1, 1)
+        g = mixture.GMM(n_components=2, covariance_type='tied')
+        g.fit(obs)
+        mu_estimates.append([elem, field, g.means_])
 
 
-observations = dummy_data[dummy_xs[0]]
-
-alpha = list(fb.forward(fb.get_init, fb.get_transition, fb.get_emission, observations)[0])
-alpha2 = list(fb.backward(fb.get_init, fb.get_transition, fb.get_emission, observations)[0])
-
-obs = data[xs[0]]
-obs = [obs[i][0][0] for i in obs]
-obs = np.asarray(obs).reshape(-1, 1)
 
 
-g = mixture.GMM(n_components=2, covariance_type='tied')
 
-g.fit(obs)
 
 
 
