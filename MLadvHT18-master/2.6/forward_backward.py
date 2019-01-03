@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn import mixture
 
 
 def get_transition(r1, m, r2):
@@ -9,9 +10,9 @@ def get_transition(r1, m, r2):
         return 0.75
 
 
-def get_emission(r, o, m):
+def get_emission(r, o):
     # calculate O(m, o) (for test purpose we set below)
-    return o
+    return 1
 
 
 def get_init():
@@ -33,8 +34,7 @@ def forward(get_init, get_transition, get_emission, observations):
     for r in range(R):
         O.append(get_emission(r, observations[0][0]))
     alpha[0, :] = pi * O[:]
-    alpha_mat[0, 0, 0:2] = pi * O[:]
-    alpha_mat[0, 1, 0:2] = pi * O[:]
+
     # recursive case
     for m in range(1, M):
         for r2 in range(R):
@@ -42,9 +42,6 @@ def forward(get_init, get_transition, get_emission, observations):
                 transition = get_transition(r1, m, r2)
                 emission = get_emission(r2, observations[m][0])
                 alpha[m, r2] += alpha[m - 1, r1] * transition * emission
-
-                alpha_mat[m, r2] += alpha[m - 1, r1] * transition * emission
-
 
     return (alpha, np.sum(alpha[M - 1, :]))
 

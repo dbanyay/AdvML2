@@ -5,6 +5,7 @@ import numpy as np
 from collections import defaultdict
 from em import exp_max
 import forward_backward as fb
+from sklearn import mixture
 
 
 
@@ -63,24 +64,48 @@ def load_obj(name ):
 '''Save the dictionary'''
 #save_obj(output_sequences,"sequence_output")
 
-data = generate_data()
+dummy_data = generate_data()
 
-# data = load_obj("sequence_output_2")
+dummy_xs = list(dummy_data.keys())
+
+data = load_obj("sequence_output_2")
 
 xs = list(data.keys())
 
+
+
 players = []
 for p in range(1,N+1):
-    players.append( np.where([i[0] == p or i[1] == p for i in xs]))
-test = players[0]
-
-observations = data[xs[0]]
-
-# observations = [observations[i][0][0] for i in observations]
+    players.append( np.where([i[0] == p or i[1] == p for i in dummy_xs]))
 
 
-print(fb.forward(fb.get_init, fb.get_transition, fb.get_emission, observations))
+observations = dummy_data[dummy_xs[0]]
 
+alpha = list(fb.forward(fb.get_init, fb.get_transition, fb.get_emission, observations)[0])
+alpha2 = list(fb.backward(fb.get_init, fb.get_transition, fb.get_emission, observations)[0])
+
+obs = data[xs[0]]
+obs = [obs[i][0][0] for i in obs]
+obs = np.asarray(obs).reshape(-1, 1)
+
+
+g = mixture.GMM(n_components=2, covariance_type='tied')
+
+g.fit(obs)
+
+
+
+sum_mat = np.zeros([M, 2, M])
+
+
+
+# for m in range(M):
+#     sum_mat[m, 0, m:m+1] = alpha[m][0]
+#     sum_mat[m, 1, m:m + 1] = alpha[m][1]
+#
+# sum_mat_lin = np.hstack((sum_mat[:,0,:],sum_mat[:,1,:])).transpose()
+#
+# x = np.linalg.lstsq(sum_mat_lin, observations)
 
 
 # xs = np.array([(5,5), (9,1), (8,2), (4,6), (7,3)])
