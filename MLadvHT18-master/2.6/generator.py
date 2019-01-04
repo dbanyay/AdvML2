@@ -5,6 +5,7 @@ import numpy as np
 from collections import defaultdict
 from sklearn import mixture
 import warnings
+import matplotlib.pyplot as plt
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -102,13 +103,64 @@ xs = list(data.keys())
 # np.save("mat", mat)
 # TODO: create matrix, linear solve
 
-mat = np.load("mat.npy")
-mu_sums = np.load("mu_sums.npy")
+# mat = np.load("mat.npy")
+# mu_sums = np.load("mu_sums.npy")
+#
+# mu_sums0 = mu_sums[:,0]
+# mu_sums1 = mu_sums[:,1]
+
+# mat = []
+# mu_sums = []
+#
+# for elem in range(1,N):
+#     key = tuple([elem,elem+1])
+#     cur_set = data[key]
+#     for field in range(M):
+#         obs = [cur_set[i][field][0] for i in range(1, R+1)] # use range because there was an error in data
+#         obs = np.asarray(obs).reshape(-1, 1)
+#         g = mixture.GMM(n_components=2, covariance_type='tied')
+#         g.fit(obs)
+#         mu_sums.append([g.means_[0][0], g.means_[1][0]])
+#         vect = np.zeros(N*M)
+#         vect[(elem-1)*M+field] = 1
+#         vect[(elem)*M+field] = 1
+#         mat.append(vect)
+#
+#         print(str(key)+ '   '+ str(field))
+#
+# key = tuple([1,N])
+# cur_set = data[key]
+# for field in range(M):
+#     obs = [cur_set[i][field][0] for i in range(1, R + 1)]  # use range because there was an error in data
+#     obs = np.asarray(obs).reshape(-1, 1)
+#     g = mixture.GMM(n_components=2, covariance_type='tied')
+#     g.fit(obs)
+#     mu_sums.append([g.means_[0][0], g.means_[1][0]])
+#     vect = np.zeros(N * M)
+#     vect[field] = 1
+#     vect[(N-1)*M + field] = 1
+#     mat.append(vect)
+#
+#     print(str(key) + '   ' + str(field))
+#
+#
+# np.save("mu_sums_s", mu_sums)
+# np.save("mat_s", mat)
+
+
+mat = np.load("mat_s.npy")
+mat = mat[:,0:570]
+
+
+mu_sums = np.load("mu_sums_s.npy")
+
+# plt.imshow(mat)
+# plt.show()
 
 mu_sums0 = mu_sums[:,0]
 mu_sums1 = mu_sums[:,1]
 
-sol1 = np.linalg.lstsq(mat, mu_sums0)
-sol2 = np.linalg.lstsq(mat, mu_sums1)
+
+sol1 = np.linalg.solve(mat,mu_sums1)
 
 a = 1
