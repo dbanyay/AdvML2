@@ -132,13 +132,16 @@ mu, std = norm.fit(sol0)
 x = np.linspace(np.min(sol0), np.max(sol0), 100)
 p = norm.pdf(x,mu,std)
 plt.plot(x, p, 'k', linewidth = 2)
+plt.title("Normal Distribution of field 0:  mu = %.2f, beta = %.2f" % (mu, std))
 plt.show()
+
 
 sol1 = np.linalg.solve(mat,mu_sums1)
 mu, std = norm.fit(sol1)
 x = np.linspace(np.min(sol1), np.max(sol1), 100)
 p = norm.pdf(x,mu,std)
 plt.plot(x, p, 'k', linewidth = 2)
+plt.title("Normal Distribution of field 0:  mu = %.2f, beta = %.2f" % (mu, std))
 plt.show()
 
 
