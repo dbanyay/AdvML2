@@ -6,6 +6,7 @@ from collections import defaultdict
 from sklearn import mixture
 import warnings
 import matplotlib.pyplot as plt
+from scipy.stats import norm
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -80,40 +81,15 @@ data = load_obj("sequence_output_2")
 xs = list(data.keys())
 
 
+mat = []
+mu_sums = []
+betas = []
 
-# mu_sums = []
-# mat = []
-#
-# for elem in xs:
-#     cur_set = data[elem]
-#     for field in range(M):
-#         obs = [cur_set[i][field][0] for i in range(1, R+1)] # use range because there was an error in data
-#         obs = np.asarray(obs).reshape(-1, 1)
-#         g = mixture.GMM(n_components=2, covariance_type='tied')
-#         g.fit(obs)
-#         mu_sums.append([g.means_[0][0], g.means_[1][0]])
-#         vect = np.zeros(N*M)
-#         vect[elem[0]*N-1+field] = 1
-#         vect[elem[1] * N - 1+field] = 1
-#         mat.append(vect)
-#
-#         print(str(elem)+ '   '+ str(field))
-#
-# np.save("mu_sums", mu_sums)
-# np.save("mat", mat)
-# TODO: create matrix, linear solve
-
-# mat = np.load("mat.npy")
-# mu_sums = np.load("mu_sums.npy")
-#
-# mu_sums0 = mu_sums[:,0]
-# mu_sums1 = mu_sums[:,1]
-
-# mat = []
-# mu_sums = []
-#
-# for elem in range(1,N):
-#     key = tuple([elem,elem+1])
+# for elem in range(1,N+1):
+#     if elem == N:
+#         key = tuple([1, N])
+#     else:
+#         key = tuple([elem,elem+1])
 #     cur_set = data[key]
 #     for field in range(M):
 #         obs = [cur_set[i][field][0] for i in range(1, R+1)] # use range because there was an error in data
@@ -121,46 +97,49 @@ xs = list(data.keys())
 #         g = mixture.GMM(n_components=2, covariance_type='tied')
 #         g.fit(obs)
 #         mu_sums.append([g.means_[0][0], g.means_[1][0]])
-#         vect = np.zeros(N*M)
+#         betas.append(g.covars_[0][0])
+#         vect = np.zeros((N+1)*M)
 #         vect[(elem-1)*M+field] = 1
 #         vect[(elem)*M+field] = 1
 #         mat.append(vect)
 #
 #         print(str(key)+ '   '+ str(field))
 #
-# key = tuple([1,N])
-# cur_set = data[key]
-# for field in range(M):
-#     obs = [cur_set[i][field][0] for i in range(1, R + 1)]  # use range because there was an error in data
-#     obs = np.asarray(obs).reshape(-1, 1)
-#     g = mixture.GMM(n_components=2, covariance_type='tied')
-#     g.fit(obs)
-#     mu_sums.append([g.means_[0][0], g.means_[1][0]])
-#     vect = np.zeros(N * M)
-#     vect[field] = 1
-#     vect[(N-1)*M + field] = 1
-#     mat.append(vect)
 #
-#     print(str(key) + '   ' + str(field))
-#
-#
+# np.save("beta_s", betas)
 # np.save("mu_sums_s", mu_sums)
 # np.save("mat_s", mat)
 
 
 mat = np.load("mat_s.npy")
-mat = mat[:,0:570]
 
-
+mat = mat[0:570,0:570]
 mu_sums = np.load("mu_sums_s.npy")
+
+betas = np.load("beta_s.npy")
 
 # plt.imshow(mat)
 # plt.show()
 
-mu_sums0 = mu_sums[:,0]
-mu_sums1 = mu_sums[:,1]
+mu_sums0 = mu_sums[0:570,0]
+mu_sums1 = mu_sums[0:570,1]
 
+
+
+
+sol0 = np.linalg.solve(mat,mu_sums0)
+mu, std = norm.fit(sol0)
+x = np.linspace(np.min(sol0), np.max(sol0), 100)
+p = norm.pdf(x,mu,std)
+plt.plot(x, p, 'k', linewidth = 2)
+plt.show()
 
 sol1 = np.linalg.solve(mat,mu_sums1)
+mu, std = norm.fit(sol1)
+x = np.linspace(np.min(sol1), np.max(sol1), 100)
+p = norm.pdf(x,mu,std)
+plt.plot(x, p, 'k', linewidth = 2)
+plt.show()
+
 
 a = 1
