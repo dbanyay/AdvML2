@@ -51,15 +51,14 @@ def find_leaf(root):
         for elem in curr_layer:
             for child in elem.descendants:
                 if child.descendants == []:
-                    values = calculate_leaf(child, values)
+                    betas = calculate_leaf(child, values)
                     leaf_names.append(child.name)
-                    print('p: '+str(values[num_leaves]))
                     num_leaves += 1
                 next_layer.append(child)
 
         curr_layer = next_layer
     print('number of leaves: '+str(num_leaves)+'\n')
-    return leaf_names
+    return betas
 
 
     
@@ -67,12 +66,16 @@ def calculate_leaf(leaf, values):
     """
     calculate p of a leaf
     """
-
+    p = 1
     cur_node = leaf
     beta = cur_node.sample
-    leaf_params = [item[beta] for item in leaf.cat]
-    print('leaf: '+leaf.name+' sample: '+ str(leaf.sample))
-    values.append(leaf_params)
+    while cur_node.ancestor.ancestor != None:
+        p *= sum([elem[beta] for elem in cur_node.cat]) / np.sum(cur_node.cat)
+        cur_node = cur_node.ancestor
+
+    p *= cur_node.ancestor.cat[0][beta]
+    print('leaf: '+leaf.name+' p: '+ str(p))
+    values.append([leaf.name, p])
     return values
 
 

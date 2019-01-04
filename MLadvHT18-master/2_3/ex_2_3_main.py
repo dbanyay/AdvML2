@@ -76,7 +76,7 @@ load_sample(root, sample)
 
 print('Root: \n')
 print_tree(root, print_sample = True)
-beta = find_leaf(root)
+betas = find_leaf(root)
 
 
 
