@@ -3,9 +3,10 @@ import random
 import itertools
 import numpy as np
 from collections import defaultdict
-from em import exp_max
-import forward_backward as fb
 from sklearn import mixture
+import warnings
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 
@@ -77,44 +78,37 @@ data = load_obj("sequence_output_2")
 
 xs = list(data.keys())
 
-players = []
-
-for p in range(1,N+1):
-    players.append(np.where([i[0] == p or i[1] == p for i in xs])[0])
-
-mu_sums = []
-
-for elem in xs:
-    cur_set = data[elem]
-    for field in range(1,N):
-        obs = [cur_set[i][field][0] for i in range(1, R+1)] # use range because there was an error in data
-        obs = np.asarray(obs).reshape(-1, 1)
-        g = mixture.GMM(n_components=2, covariance_type='tied')
-        g.fit(obs)
-        mu_sums.append([elem, field, g.means_])
-        print(str(elem)+ '   '+ str(field))
 
 
-sum_mat = np.zeros([M, 2, M])
-
-
-
-# for m in range(M):
-#     sum_mat[m, 0, m:m+1] = alpha[m][0]
-#     sum_mat[m, 1, m:m + 1] = alpha[m][1]
+# mu_sums = []
+# mat = []
 #
-# sum_mat_lin = np.hstack((sum_mat[:,0,:],sum_mat[:,1,:])).transpose()
+# for elem in xs:
+#     cur_set = data[elem]
+#     for field in range(M):
+#         obs = [cur_set[i][field][0] for i in range(1, R+1)] # use range because there was an error in data
+#         obs = np.asarray(obs).reshape(-1, 1)
+#         g = mixture.GMM(n_components=2, covariance_type='tied')
+#         g.fit(obs)
+#         mu_sums.append([g.means_[0][0], g.means_[1][0]])
+#         vect = np.zeros(N*M)
+#         vect[elem[0]*N-1+field] = 1
+#         vect[elem[1] * N - 1+field] = 1
+#         mat.append(vect)
 #
-# x = np.linalg.lstsq(sum_mat_lin, observations)
+#         print(str(elem)+ '   '+ str(field))
+#
+# np.save("mu_sums", mu_sums)
+# np.save("mat", mat)
+# TODO: create matrix, linear solve
 
+mat = np.load("mat.npy")
+mu_sums = np.load("mu_sums.npy")
 
-# xs = np.array([(5,5), (9,1), (8,2), (4,6), (7,3)])
-# thetas = np.array([[0.6, 0.4], [0.5, 0.5]])
-# i, thetas, ll = exp_max(xs, thetas)
-# print(i)
-# for theta in thetas:
-#     print(theta)
-# print(ll)
+mu_sums0 = mu_sums[:,0]
+mu_sums1 = mu_sums[:,1]
 
+sol1 = np.linalg.lstsq(mat, mu_sums0)
+sol2 = np.linalg.lstsq(mat, mu_sums1)
 
 a = 1
